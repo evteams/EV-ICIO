@@ -1,6 +1,22 @@
 # EV-ICIO
 
-R code and input data for the EV–ICIO analysis.
+R code and input data for EV–ICIO table construction and the production of data and results reported in the paper.
+
+The repository contains two stages: `EV-table-construction/` establishes the EV table and its Monte Carlo matrices; `EV Code/` produces the paper's analysis data and results.
+
+## EV-table construction
+
+The following three original files are provided in [`EV-table-construction/`](EV-table-construction/) without changes to their contents:
+
+| File | Role |
+| --- | --- |
+| [`EVmodel.R`](EV-table-construction/EVmodel.R) | Constructs baseline EV–ICIO technical coefficients and splits final demand into EV and conventional-vehicle accounts |
+| [`MC.R`](EV-table-construction/MC.R) | Independently constructs Monte Carlo coefficient matrices; the default setting generates 1,000 `A_MC_*.rds` files |
+| [`Adata_v6.xlsx`](EV-table-construction/Adata_v6.xlsx) | Parameter workbook containing country selection, bill-of-materials shares, sourcing parameters and trade inputs |
+
+The scripts also read external `2022_SML.csv` and `2017_SML.csv` ICIO source tables, which are not included among these three files. They retain their original path settings, with `D:/Data/EV` as the default project directory; see their settings blocks and supported environment variables when preparing inputs and output locations. `EVmodel.R` requires the R package `openxlsx`; `MC.R` requires `openxlsx` and `Matrix`.
+
+## Paper data production and analysis
 
 The original `EV Code` scripts and input files are provided without changes to their contents. The folder contains four analysis modules:
 
@@ -34,7 +50,7 @@ gh release download mc-inputs-20261016 --repo evteams/EV-ICIO --pattern "EV-ICIO
 python download_mc_inputs.py --archive EV-ICIO_MC_inputs.tar.xz
 ```
 
-## Running an analysis
+## Running the paper analyses
 
 Run the relevant R script with its adjacent `input` directory available. For example, from this repository's root:
 
@@ -52,3 +68,5 @@ See the original scripts for required R packages and analysis settings. Output d
 `file_manifest.json` and `SHA256SUMS.txt` record the paths, sizes and SHA-256 checksums of all 1,030 files in the original `EV Code` folder. Thirty files are stored directly in this repository, and 1,000 matrices are stored in the release archive. Restoring the release inputs recovers the complete original file structure. To check the archive without extracting it, run `python download_mc_inputs.py --verify-only`.
 
 The README, checksum manifest and download helper are publication aids outside the original `EV Code` directory.
+
+`EV_table_construction_manifest.json` separately records the paths, sizes and SHA-256 checksums of the three original construction files. Their checksums are also included in `SHA256SUMS.txt`.
