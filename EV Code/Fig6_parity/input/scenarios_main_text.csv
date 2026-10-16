@@ -1,0 +1,7 @@
+Scenario,Grid_path,MEG
+BAU,BAU,0
+Solar,Solar,0
+Wind,Wind,0
+MEG,BAU,1
+ACES,ACES,0
+ACES + MEG,ACES,1

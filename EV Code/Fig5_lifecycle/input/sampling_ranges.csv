@@ -1,0 +1,4 @@
+﻿Parameter,Low,High,Distribution
+UF,0.3,0.7,Uniform
+PHEV_electricity_multiplier,0.9,1.1,Uniform
+PHEV_fuel_multiplier,0.9,1.1,Uniform
