@@ -1,8 +1,9 @@
-"""Restore the original Monte Carlo inputs and verify their SHA-256 checksums."""
-from concurrent.futures import ThreadPoolExecutor, as_completed
+"""Download and restore the original MC files, verifying every SHA-256 checksum."""
+import argparse
 import hashlib
 import json
-from pathlib import Path
+from pathlib import Path, PurePosixPath
+import tarfile
 import time
 from urllib.parse import quote
 from urllib.request import Request, urlopen
@@ -16,11 +17,11 @@ def checksum(path):
         return hashlib.file_digest(stream, 'sha256').hexdigest()
 
 
-def download(record):
-    destination = ROOT / record['path']
+def download_archive():
+    record = MANIFEST['archives'][0]
+    destination = ROOT / record['asset_name']
     if destination.is_file() and destination.stat().st_size == record['bytes'] and checksum(destination) == record['sha256']:
-        return record['asset_name'] + ' (already verified)'
-    destination.parent.mkdir(parents=True, exist_ok=True)
+        return destination
     temporary = destination.with_name(destination.name + '.partial')
     url = ('https://github.com/' + MANIFEST['repository'] + '/releases/download/'
            + quote(MANIFEST['release_tag'], safe='') + '/' + quote(record['asset_name'], safe=''))
@@ -34,21 +35,74 @@ def download(record):
                     digest.update(block)
                     size += len(block)
                     output.write(block)
+                    if size % (64 * 1024 * 1024) == 0:
+                        print(f'Downloaded {size / 1024**2:.0f}/{record["bytes"] / 1024**2:.0f} MiB.', flush=True)
             if size != record['bytes'] or digest.hexdigest() != record['sha256']:
-                raise RuntimeError('Downloaded file does not match the checksum manifest')
+                raise RuntimeError('Archive does not match the checksum manifest')
             temporary.replace(destination)
-            return record['asset_name']
+            return destination
         except Exception:
             if attempt == 4:
                 raise
             time.sleep(min(2 ** attempt, 15))
 
 
+def restore_archive(archive_path, verify_only=False):
+    expected = {r['path']: r for r in MANIFEST['files'] if r['storage'] == 'release_archive'}
+    seen = set()
+    with tarfile.open(archive_path, mode='r|xz') as archive:
+        for member in archive:
+            name = PurePosixPath(member.name)
+            if (not member.isfile() or member.name not in expected or member.name in seen
+                    or name.is_absolute() or '..' in name.parts):
+                raise RuntimeError('Unexpected archive member: ' + member.name)
+            record = expected[member.name]
+            if member.size != record['bytes']:
+                raise RuntimeError('Incorrect file size: ' + member.name)
+            destination = ROOT.joinpath(*name.parts)
+            if not destination.resolve().is_relative_to(ROOT.resolve()):
+                raise RuntimeError('Archive path leaves the repository')
+            already_verified = (not verify_only and destination.is_file()
+                and destination.stat().st_size == record['bytes'] and checksum(destination) == record['sha256'])
+            temporary = destination.with_name(destination.name + '.partial')
+            output = None
+            try:
+                if not verify_only and not already_verified:
+                    destination.parent.mkdir(parents=True, exist_ok=True)
+                    output = temporary.open('wb')
+                digest = hashlib.sha256()
+                with archive.extractfile(member) as stream:
+                    while block := stream.read(1024 * 1024):
+                        digest.update(block)
+                        if output is not None:
+                            output.write(block)
+                if output is not None:
+                    output.close()
+                    output = None
+                if digest.hexdigest() != record['sha256']:
+                    raise RuntimeError('File checksum mismatch: ' + member.name)
+                if not verify_only and not already_verified:
+                    temporary.replace(destination)
+            finally:
+                if output is not None:
+                    output.close()
+            seen.add(member.name)
+            if len(seen) % 100 == 0:
+                print(f'Verified {len(seen)}/{len(expected)} files.', flush=True)
+    if seen != set(expected):
+        raise RuntimeError('The archive is missing input files')
+    return len(seen)
+
+
 if __name__ == '__main__':
-    records = [record for record in MANIFEST['files'] if record['storage'] == 'release']
-    print(f'Downloading/verifying {len(records)} Monte Carlo input files.', flush=True)
-    with ThreadPoolExecutor(max_workers=3) as executor:
-        futures = [executor.submit(download, record) for record in records]
-        for count, future in enumerate(as_completed(futures), 1):
-            print(f'{count}/{len(records)}: {future.result()}', flush=True)
-    print('All Monte Carlo input files are present and verified.', flush=True)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--archive', type=Path, help='Use an already downloaded archive')
+    parser.add_argument('--verify-only', action='store_true', help='Verify all archive files without extracting them')
+    args = parser.parse_args()
+    archive_path = args.archive if args.archive is not None else download_archive()
+    record = MANIFEST['archives'][0]
+    if archive_path.stat().st_size != record['bytes'] or checksum(archive_path) != record['sha256']:
+        raise RuntimeError('Archive does not match the checksum manifest')
+    count = restore_archive(archive_path, verify_only=args.verify_only)
+    print(f'All {count} Monte Carlo files verified' + ('.' if args.verify_only else ' and restored.'), flush=True)
+
