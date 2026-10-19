@@ -63,13 +63,7 @@ Rscript "EV Code/Fig6_parity/Fig6_parity.R"
 
 See the original scripts for required R packages and analysis settings. Output directories are created by the scripts. The Figure 3 Monte Carlo analysis uses the large input matrices described above.
 
-## Figure 6 mileage correction (2026-10-19)
 
-Figure 6 contains only the complete main-text script `Fig6_parity.R` and its adjacent `input/`, with a README. The public SI package has been removed from the current branch; the author's local SI files are unchanged. The script at the original path is the full calculation, not a wrapper.
-
-Annual mileage follows the manuscript table: China 10,220; Germany 12,320; Japan 8,060; South Korea 11,936; Mexico 12,832; United States 17,873 km/vehicle/year. Within each country, BEV, PHEV and ICEV use the same fixed mileage. ICEV WTT and TTW are stored per kilometre and converted to annual emissions by the code, preventing obsolete annual totals from persisting after a mileage edit.
-
-This update replaces Figure 6 inputs and code only. Formal simulation outputs and figures have not been regenerated or uploaded. The 1,000 A matrices and their release archive are unchanged.
 
 ## File integrity
 
