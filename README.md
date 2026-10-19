@@ -25,7 +25,7 @@ The `EV Code` folder contains the current analysis scripts and input data. Corre
 | `EV Code/Fig3_production` | Vehicle production emissions and Monte Carlo calculations |
 | `EV Code/Fig4_sector` | Sector contributions to production emissions |
 | `EV Code/Fig5_lifecycle` | Vehicle life-cycle emissions |
-| `EV Code/Fig6_parity` | Main-text carbon-parity times and scenarios |
+| `EV Code/Fig6_parity` | Carbon parity times and scenarios |
 
 ## Large Monte Carlo inputs
 
