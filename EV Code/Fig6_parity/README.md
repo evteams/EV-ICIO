@@ -1,22 +1,31 @@
-# Figure 6: independent main-text and SI packages / 图6正文与SI独立复现包
+# Figure 6 main-text calculation
 
-正文和SI已完全拆分。每个子文件夹都有自己的RStudio项目、完整R计算脚本、实际input文件、output结果和README；不共享输入、不互相调用，也不依赖另一份结果。可以分别移动、上传和运行。
+This directory contains the main-text R calculation and its own input data only. SI scripts, SI inputs, simulation outputs and plotting files are not included.
 
-| 对应结果 | 独立文件夹 | RStudio项目 | 计算脚本 | 必需输入 | 结果文件 |
-| --- | --- | --- | --- | --- | --- |
-| 正文，第一张图 | [main_text](main_text/) | [Fig6_main_text.Rproj](main_text/Fig6_main_text.Rproj) | [Fig6_parity.R](main_text/Fig6_parity.R) | 7份 | 5份 |
-| SI，第二张图 | [SI](SI/) | [Fig6_SI.Rproj](SI/Fig6_SI.Rproj) | [Fig6_SI.R](SI/Fig6_SI.R) | 9份 | 6份 |
+## Run
 
-正文情景：BAU、Solar、Wind、MEG、ACES、ACES + MEG。
+From the repository root:
 
-SI情景：BAU、Battery、Steel、ACES、ACES + Battery、ACES + Steel、ACES + Battery + Steel。
+```sh
+Rscript "EV Code/Fig6_parity/Fig6_parity.R"
+```
 
-各自BAU结果同时用于插图。两份计算都使用no recycling、带符号parity和生产当年的固定使用排放。只保留数据处理和MC，不含制图或核对代码。具体公式、抽样、输入单位和输出字段见各自README。
+Alternatively, open the complete `Fig6_parity.R` script in RStudio and source it. The script uses base R, resolves its adjacent `input/` directory automatically, and writes results to `output/`.
 
-2026-10-19修正：年行驶里程统一为CHN 10220、DEU 12320、JPN 8060、KOR 11936、MEX 12832、USA 17873 km/vehicle/year。同一国家的BEV、PHEV和ICEV共用唯一annual_km。ICEV输入以kg CO2/km保存，年排放在代码中用当前里程计算。正文与SI的input和脚本同步更新；正式output尚未重跑，不应将修正前结果当作新结果。原有Origin项目、Excel和Word未修改。
+## Inputs
 
-运行时打开对应Rproj并完整Source同文件夹中的R脚本。使用Base R，无须安装其他包。每份均为1000个EV A编号×每国5000组价格/使用参数的交叉计算；本次仅修正里程及其年排放换算，抽样和情景参数保持不变。
+| File | Contents |
+| --- | --- |
+| `production_coefficients_EV.csv` | EV production coefficients for the original 1,000 A realizations, with supplier-country electricity contributions |
+| `production_coefficients_ICEV.csv` | Fixed ICEV production coefficients and electricity contributions |
+| `vehicle_price_ranges_2023.csv` | EV and ICEV price bounds in USD/vehicle |
+| `grid_factors_2023_2030.csv` | Fixed BAU, Solar, Wind and ACES electricity pathways |
+| `vehicle_use_2023.csv` | Vehicle shares, energy use, calibrated grid intensities, annual mileage, gasoline factors and ICEV per-kilometre WTT/TTW intensities |
+| `sampling_ranges.csv` | Uniform bounds for UF, the shared PHEV energy multiplier and the MEG endpoint |
+| `scenarios_main_text.csv` | BAU, Solar, Wind, MEG, ACES and ACES + MEG definitions |
 
-本包不依赖历史备份。2026-10-12拆分时曾完整重跑并核对结果；这不等于2026-10-19里程修正后的正式重跑。本次已对六国全部年份和情景进行小样本回归测试，正式output仍需重新生成。
+Annual mileage is fixed at China 10,220; Germany 12,320; Japan 8,060; South Korea 11,936; Mexico 12,832; United States 17,873 km/vehicle/year. Within each country, BEV, PHEV and ICEV use the same `annual_km`. ICEV WTT/TTW inputs are in kg CO2/km; the code multiplies these by current annual mileage and divides by 1,000 to obtain t CO2/year. Vehicle energy consumption and the calibrated BEV/PHEV electricity intensities are unchanged.
 
-本目录原有两个Origin项目保留原位置、未修改。公开复现只需分别使用main_text和SI的input、R脚本、Rproj及README；不上传旧output、作者核对或历史备份目录。
+The calculation crosses 1,000 A realizations with 5,000 paired price/use vectors per country. UF and the shared PHEV electricity/fuel multiplier are independent; the MEG endpoint is sampled from 3%-7% and phased in linearly to 2030. Seeds, scenario paths and no-recycling assumptions are unchanged. Low and High are the 2.5th and 97.5th simulation percentiles, not confidence intervals for a mean. Signed parity uses production-year use-phase intensities, held fixed during payback.
+
+This upload replaces code and inputs only. Full simulation outputs and figures have not been regenerated or uploaded. The author's local SI package is unchanged; prior published versions remain recoverable through Git history.

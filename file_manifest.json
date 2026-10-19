@@ -1,8 +1,8 @@
 {
   "repository": "evteams/EV-ICIO",
   "release_tag": "mc-inputs-20261016",
-  "file_count": 1043,
-  "total_bytes": 39156280207,
+  "file_count": 1028,
+  "total_bytes": 39145421077,
   "files": [
     {
       "path": "EV Code/Fig3_production/Fig3_production.R",
@@ -7120,146 +7120,56 @@
     },
     {
       "path": "EV Code/Fig6_parity/Fig6_parity.R",
-      "bytes": 769,
-      "sha256": "11c3297a44b60b9f70c2ef6eef1704beae9e0ebf273c73e334775fafeee04ab0",
+      "bytes": 10494,
+      "sha256": "0e9df8e844ea5fd88f81f8dd19f8e3667672848800f6e3d36004a81a4ba89c87",
       "storage": "git"
     },
     {
-      "path": "EV Code/Fig6_parity/main_text/Fig6_main_text.Rproj",
-      "bytes": 156,
-      "sha256": "49e0757012ad1cdfee4efb09d72557166c7cfd5bbbd3fca55b0c4514528e8719",
-      "storage": "git"
-    },
-    {
-      "path": "EV Code/Fig6_parity/main_text/Fig6_parity.R",
-      "bytes": 10813,
-      "sha256": "64ca5bd5bffdfe7b5d4fbd7632174afcdeccc0112f6223312f9ce1cff5b7b442",
-      "storage": "git"
-    },
-    {
-      "path": "EV Code/Fig6_parity/main_text/input/grid_factors_2023_2030.csv",
+      "path": "EV Code/Fig6_parity/input/grid_factors_2023_2030.csv",
       "bytes": 49686,
       "sha256": "ab491a483b6b5d940a184e4b9cec8d1df456dc49f51c9a606be4d087db821bf5",
       "storage": "git"
     },
     {
-      "path": "EV Code/Fig6_parity/main_text/input/production_coefficients_EV.csv",
+      "path": "EV Code/Fig6_parity/input/production_coefficients_EV.csv",
       "bytes": 10661615,
       "sha256": "f54072b8b580dcfa3948af1ec99c9cd80dc214bb09afdf5f2e5a1b550486035d",
       "storage": "git"
     },
     {
-      "path": "EV Code/Fig6_parity/main_text/input/production_coefficients_ICEV.csv",
+      "path": "EV Code/Fig6_parity/input/production_coefficients_ICEV.csv",
       "bytes": 11126,
       "sha256": "978997959f5c9e5e1c8e1ddda6c88663d0f090373d9cbea4c29d501141d8ba45",
       "storage": "git"
     },
     {
-      "path": "EV Code/Fig6_parity/main_text/input/sampling_ranges.csv",
+      "path": "EV Code/Fig6_parity/input/sampling_ranges.csv",
       "bytes": 96,
       "sha256": "8c4f9945df0c69e0aa5dc524672596d1d6b6953c596ccf909f8b4a6c25079a0e",
       "storage": "git"
     },
     {
-      "path": "EV Code/Fig6_parity/main_text/input/scenarios_main_text.csv",
+      "path": "EV Code/Fig6_parity/input/scenarios_main_text.csv",
       "bytes": 99,
       "sha256": "adb9f2f55690d229514c28aa03ccf200f7f5183db10ddcd659ee33a298a6a3eb",
       "storage": "git"
     },
     {
-      "path": "EV Code/Fig6_parity/main_text/input/vehicle_price_ranges_2023.csv",
+      "path": "EV Code/Fig6_parity/input/vehicle_price_ranges_2023.csv",
       "bytes": 609,
       "sha256": "3ec05bc6cb3fa24f9b609455418aef2c1b103b374903f2d611976aa01f574af5",
       "storage": "git"
     },
     {
-      "path": "EV Code/Fig6_parity/main_text/input/vehicle_use_2023.csv",
+      "path": "EV Code/Fig6_parity/input/vehicle_use_2023.csv",
       "bytes": 1740,
       "sha256": "58a807700db9cb11489fa2282fa50fa9bb6472e78e944d2e62be4bf9a45a3af7",
-      "storage": "git"
-    },
-    {
-      "path": "EV Code/Fig6_parity/main_text/README.md",
-      "bytes": 9062,
-      "sha256": "0135c9e1547d71ace7919ed792afbf2899c8b48faa620ad034628f34fd38257d",
       "storage": "git"
     },
     {
       "path": "EV Code/Fig6_parity/README.md",
-      "bytes": 2306,
-      "sha256": "fa8e3afd19e806ae626ef8412c84041840d020916e630157124ca4e2c24ee7e0",
-      "storage": "git"
-    },
-    {
-      "path": "EV Code/Fig6_parity/SI/Fig6_SI.R",
-      "bytes": 12469,
-      "sha256": "664a19f0d24839c32521dcb00f8c40a199bab97925565fbc27fd7150aa422941",
-      "storage": "git"
-    },
-    {
-      "path": "EV Code/Fig6_parity/SI/Fig6_SI.Rproj",
-      "bytes": 156,
-      "sha256": "49e0757012ad1cdfee4efb09d72557166c7cfd5bbbd3fca55b0c4514528e8719",
-      "storage": "git"
-    },
-    {
-      "path": "EV Code/Fig6_parity/SI/input/battery_parameters.csv",
-      "bytes": 128,
-      "sha256": "e917e42aac5427feb69e6db885fe935a9925e820af3a28955224089021c61d0b",
-      "storage": "git"
-    },
-    {
-      "path": "EV Code/Fig6_parity/SI/input/grid_factors_2023_2030.csv",
-      "bytes": 27878,
-      "sha256": "97af2b8c7db94d5dba8e090082cce1ffe9b155c3cd692c8d289ee75f42c99543",
-      "storage": "git"
-    },
-    {
-      "path": "EV Code/Fig6_parity/SI/input/production_coefficients_EV.csv",
-      "bytes": 10783442,
-      "sha256": "3cf63aa21e417e909b79a6c2c3cbf1164c1d8737fba38f8358bd03dad5442cdc",
-      "storage": "git"
-    },
-    {
-      "path": "EV Code/Fig6_parity/SI/input/production_coefficients_ICEV.csv",
-      "bytes": 11253,
-      "sha256": "7d5e28e1625ebf2808418ac1a4f4d28d1e87dd721c460352ed575339a581dd52",
-      "storage": "git"
-    },
-    {
-      "path": "EV Code/Fig6_parity/SI/input/sampling_ranges.csv",
-      "bytes": 66,
-      "sha256": "fbb1dc8fe583184a0d7a7ee396690fd2e342c4ed3c62d035804b21633438ad4d",
-      "storage": "git"
-    },
-    {
-      "path": "EV Code/Fig6_parity/SI/input/scenarios_SI.csv",
-      "bytes": 167,
-      "sha256": "a9527b6d207d4cdca9828ecec8a60d4900aff7e11c0015ba621cdf89736d0a99",
-      "storage": "git"
-    },
-    {
-      "path": "EV Code/Fig6_parity/SI/input/steel_factors_2023_2030.csv",
-      "bytes": 212,
-      "sha256": "bee6d0442af7a3853ab335e6c5b4f4e5a79307af7644b68efb84e7e1c810dd06",
-      "storage": "git"
-    },
-    {
-      "path": "EV Code/Fig6_parity/SI/input/vehicle_price_ranges_2023.csv",
-      "bytes": 609,
-      "sha256": "3ec05bc6cb3fa24f9b609455418aef2c1b103b374903f2d611976aa01f574af5",
-      "storage": "git"
-    },
-    {
-      "path": "EV Code/Fig6_parity/SI/input/vehicle_use_2023.csv",
-      "bytes": 1740,
-      "sha256": "58a807700db9cb11489fa2282fa50fa9bb6472e78e944d2e62be4bf9a45a3af7",
-      "storage": "git"
-    },
-    {
-      "path": "EV Code/Fig6_parity/SI/README.md",
-      "bytes": 10853,
-      "sha256": "7ec5f8461ab675e5b639ceb47bda9d566c24c6940efcac24e35adac2f60eea05",
+      "bytes": 2455,
+      "sha256": "3fcf03e1b4c20dfb191ab41d5c4354c4cf6b0dbdda6741f47ab9803dcefd89ca",
       "storage": "git"
     }
   ],

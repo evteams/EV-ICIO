@@ -1,8 +1,0 @@
-Scenario,Grid_path,Battery,Steel
-BAU,BAU,0,0
-Battery,BAU,1,0
-Steel,BAU,0,1
-ACES,ACES,0,0
-ACES + Battery,ACES,1,0
-ACES + Steel,ACES,0,1
-ACES + Battery + Steel,ACES,1,1
