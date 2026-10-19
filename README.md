@@ -18,14 +18,14 @@ The scripts also read external `2022_SML.csv` and `2017_SML.csv` ICIO source tab
 
 ## Paper data production and analysis
 
-The original `EV Code` scripts and input files are provided without changes to their contents. The folder contains four analysis modules:
+The `EV Code` folder contains the current analysis scripts and input data. Corrections are recorded in Git history and the module READMEs. It contains four analysis modules:
 
 | Directory | Analysis |
 | --- | --- |
 | `EV Code/Fig3_production` | Vehicle production emissions and Monte Carlo calculations |
 | `EV Code/Fig4_sector` | Sector contributions to production emissions |
 | `EV Code/Fig5_lifecycle` | Vehicle life-cycle emissions |
-| `EV Code/Fig6_parity` | Carbon-parity times and scenarios |
+| `EV Code/Fig6_parity` | Independent main-text and SI carbon-parity packages |
 
 ## Large Monte Carlo inputs
 
@@ -58,15 +58,24 @@ Run the relevant R script with its adjacent `input` directory available. For exa
 Rscript "EV Code/Fig3_production/Fig3_production.R"
 Rscript "EV Code/Fig4_sector/Fig4_sector.R"
 Rscript "EV Code/Fig5_lifecycle/Fig5_lifecycle.R"
-Rscript "EV Code/Fig6_parity/Fig6_parity.R"
+Rscript "EV Code/Fig6_parity/main_text/Fig6_parity.R"
+Rscript "EV Code/Fig6_parity/SI/Fig6_SI.R"
 ```
 
 See the original scripts for required R packages and analysis settings. Output directories are created by the scripts. The Figure 3 Monte Carlo analysis uses the large input matrices described above.
 
+## Figure 6 mileage correction (2026-10-19)
+
+Figure 6 now has independent `main_text/` and `SI/` folders, each with its own R script and complete `input/`. The former `EV Code/Fig6_parity/Fig6_parity.R` command is retained as a main-text compatibility entry.
+
+Annual mileage follows the manuscript table: China 10,220; Germany 12,320; Japan 8,060; South Korea 11,936; Mexico 12,832; United States 17,873 km/vehicle/year. Within each country, BEV, PHEV and ICEV use the same fixed mileage. ICEV WTT and TTW are stored per kilometre and converted to annual emissions by the code, preventing obsolete annual totals from persisting after a mileage edit.
+
+This update replaces Figure 6 inputs and code only. Formal simulation outputs and figures have not been regenerated or uploaded. The 1,000 A matrices and their release archive are unchanged.
+
 ## File integrity
 
-`file_manifest.json` and `SHA256SUMS.txt` record the paths, sizes and SHA-256 checksums of all 1,030 files in the original `EV Code` folder. Thirty files are stored directly in this repository, and 1,000 matrices are stored in the release archive. Restoring the release inputs recovers the complete original file structure. To check the archive without extracting it, run `python download_mc_inputs.py --verify-only`.
+`file_manifest.json` and `SHA256SUMS.txt` record the paths, sizes and SHA-256 checksums of all 1,043 files in the current `EV Code` folder. 43 files are stored directly in this repository, and 1,000 matrices are stored in the release archive. Restoring the release inputs recovers the complete original file structure. To check the archive without extracting it, run `python download_mc_inputs.py --verify-only`.
 
-The README, checksum manifest and download helper are publication aids outside the original `EV Code` directory.
+The README, checksum manifest and download helper are publication aids outside the `EV Code` directory.
 
 `EV_table_construction_manifest.json` separately records the paths, sizes and SHA-256 checksums of the three original construction files. Their checksums are also included in `SHA256SUMS.txt`.
