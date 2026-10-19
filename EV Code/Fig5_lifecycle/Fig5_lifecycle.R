@@ -36,6 +36,7 @@ draw_uniform <- function(parameter, n) {
   runif(n, r$Low, r$High)
 }
 summarize_MC <- function(x) {
+  # Central 95% simulation uncertainty interval, not a confidence interval for the mean.
   q <- quantile(x, c(.025, .5, .975), names = FALSE, type = 7)
   data.frame(N = length(x), Mean = mean(x), Median = q[2], Low = q[1], High = q[3], SD = sd(x))
 }
@@ -70,20 +71,20 @@ for (cc in countries) {
   ICEV_production <- coefficient_ICEV * prices$Price_ICEV_USD / 1000
 
   # One independent use realization per A-price case: 5,000,000 per country.
+  # UF is independent of q; one shared q changes PHEV electricity and fuel consumption.
   UF <- draw_uniform("UF", n_lifecycle)
-  q_electricity <- draw_uniform("PHEV_electricity_multiplier", n_lifecycle)
-  q_fuel <- draw_uniform("PHEV_fuel_multiplier", n_lifecycle)
+  q_energy <- draw_uniform("PHEV_energy_multiplier", n_lifecycle)
   km_to_tonnes <- lifetime_km / 1000  # kg/km x km -> t CO2
 
   # Energy production
   BEV_WTT <- e$BEV_EC_kWh_km * e$BEV_k_rw * e$BEV_k_loss * grid_BEV * km_to_tonnes
-  PHEV_WTT <- UF * e$PHEV_EC_kWh_km * q_electricity * e$PHEV_k_rw_elec *
+  PHEV_WTT <- UF * e$PHEV_EC_kWh_km * q_energy * e$PHEV_k_rw_elec *
     e$PHEV_k_loss * grid_PHEV * km_to_tonnes +
-    (1 - UF) * e$PHEV_FC_L_km * q_fuel * e$PHEV_k_rw_fuel * gasoline_PHEV * km_to_tonnes
+    (1 - UF) * e$PHEV_FC_L_km * q_energy * e$PHEV_k_rw_fuel * gasoline_PHEV * km_to_tonnes
   ICEV_WTT <- e$ICEV_FC_WTT_L_km * e$ICEV_k_rw_WTT * gasoline_ICEV * km_to_tonnes
 
   # Driving 
-  PHEV_driving <- (1 - UF) * e$PHEV_FC_L_km * q_fuel * e$PHEV_k_rw_fuel *
+  PHEV_driving <- (1 - UF) * e$PHEV_FC_L_km * q_energy * e$PHEV_k_rw_fuel *
     f$PHEV_TTW_kgCO2_L * km_to_tonnes
   ICEV_driving <- e$ICEV_FC_TTW_L_km * e$ICEV_k_rw_TTW * f$ICEV_TTW_kgCO2_L * km_to_tonnes
   EV <- list(Production = EV_production,
@@ -118,8 +119,8 @@ for (cc in countries) {
       Difference = "EV - ICEV", Unit = "t CO2/vehicle")
   }
 
-  rm(draws, EV, ICEV, difference, EV_production, ICEV_production, UF, q_electricity,
-     q_fuel, PHEV_WTT, PHEV_driving)
+  rm(draws, EV, ICEV, difference, EV_production, ICEV_production, UF, q_energy,
+     PHEV_WTT, PHEV_driving)
   invisible(gc(FALSE))
 }
 
@@ -144,6 +145,8 @@ write.csv(difference_summary, file.path(output_dir, "Fig5_EV_minus_ICEV_summary.
 write.csv(total_summary, file.path(output_dir, "Fig5_total_summary.csv"), row.names = FALSE)
 saveRDS(list(Settings = list(Countries = countries, Lifetime_km = lifetime_km, Seed = seed,
   N_A_EV = n_A, N_A_ICEV = 1L, N_price = n_price, N_use_per_country = n_lifecycle,
+  Use_sampling = "UF independent of one shared PHEV electricity/fuel multiplier",
+  Interval_level = 0.95, Interval_probabilities = c(.025, .975),
   Quantile_type = 7L), Stage_summary = stage_summary,
   Difference_summary = difference_summary, Total_summary = total_summary),
   file.path(output_dir, "Fig5_results.rds"))

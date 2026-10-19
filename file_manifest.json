@@ -2,7 +2,7 @@
   "repository": "evteams/EV-ICIO",
   "release_tag": "mc-inputs-20261016",
   "file_count": 1030,
-  "total_bytes": 39145540341,
+  "total_bytes": 39145540539,
   "files": [
     {
       "path": "EV Code/Fig3_production/Fig3_production.R",
@@ -7072,8 +7072,8 @@
     },
     {
       "path": "EV Code/Fig5_lifecycle/Fig5_lifecycle.R",
-      "bytes": 7296,
-      "sha256": "fb72be6ea15448b9cc779bb10ba9d8c23edd41d9e0fade2fc17ebf2323ea3774",
+      "bytes": 7537,
+      "sha256": "d997441c6454c5fbf9e519d33e95a6ba6b02822f489a6127bddfa952442c73f6",
       "storage": "git"
     },
     {
@@ -7108,8 +7108,8 @@
     },
     {
       "path": "EV Code/Fig5_lifecycle/input/sampling_ranges.csv",
-      "bytes": 139,
-      "sha256": "e7319054a8b53c0f54687b81a50901297a57328ad3bad1d2e406a8a92a896e75",
+      "bytes": 96,
+      "sha256": "bd4d79a892c1647502059c85935e3aa87f136fd897f7e8ada22d720f0e1f392d",
       "storage": "git"
     },
     {
