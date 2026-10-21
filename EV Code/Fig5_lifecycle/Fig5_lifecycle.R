@@ -27,6 +27,12 @@ sales_mix <- read_input("bev_phev_sales_2023.csv")
 recycling <- read_input("recycling_credit_fractions.csv")
 ranges <- read_input("sampling_ranges.csv")
 production <- readRDS(file.path(input_dir, "production_draws.rds"))
+# Do not reuse coefficients generated with the previous calibration.
+
+production_calibration <- production$Settings$Production_calibration
+if (!isTRUE(all.equal(production_calibration$China_D_multiplier, 1.12533)) ||
+    !isTRUE(all.equal(production_calibration$China_C27_intensity, 0.0156)))
+  stop("Old production cache: run revised Fig3_production.R and Refresh_production_inputs.R first.")
 n_A <- production$Settings$N_A_EV
 n_price <- production$Settings$N_price
 n_lifecycle <- n_A * n_price
@@ -145,6 +151,7 @@ write.csv(difference_summary, file.path(output_dir, "Fig5_EV_minus_ICEV_summary.
 write.csv(total_summary, file.path(output_dir, "Fig5_total_summary.csv"), row.names = FALSE)
 saveRDS(list(Settings = list(Countries = countries, Lifetime_km = lifetime_km, Seed = seed,
   N_A_EV = n_A, N_A_ICEV = 1L, N_price = n_price, N_use_per_country = n_lifecycle,
+  Production_calibration = production_calibration,
   Use_sampling = "UF independent of one shared PHEV electricity/fuel multiplier",
   Interval_level = 0.95, Interval_probabilities = c(.025, .975),
   Quantile_type = 7L), Stage_summary = stage_summary,

@@ -1,13 +1,13 @@
 {
   "repository": "evteams/EV-ICIO",
   "release_tag": "mc-inputs-20261016",
-  "file_count": 1028,
-  "total_bytes": 39145421077,
+  "file_count": 1029,
+  "total_bytes": 39144505397,
   "files": [
     {
       "path": "EV Code/Fig3_production/Fig3_production.R",
-      "bytes": 6734,
-      "sha256": "7ad5efefe9654c457beaa49a146df8ff3added1f0294f4bb4a50c9d2e24584b4",
+      "bytes": 8887,
+      "sha256": "a90e18bcd2e9dace6d3ed9a23a0d01fee4f64bd6dd6cdbf054838056cbe438ae",
       "storage": "git"
     },
     {
@@ -7048,8 +7048,8 @@
     },
     {
       "path": "EV Code/Fig4_sector/Fig4_sector.R",
-      "bytes": 3696,
-      "sha256": "1327492491a8328ca1f232d1465d69fe2c25f8d411253d921b6562a0b0c1dcd2",
+      "bytes": 7919,
+      "sha256": "a2b0b8e8e73a4dccfda82580e7984950d49270c13b6c712e6ba773597ce93dff",
       "storage": "git"
     },
     {
@@ -7072,8 +7072,8 @@
     },
     {
       "path": "EV Code/Fig5_lifecycle/Fig5_lifecycle.R",
-      "bytes": 7537,
-      "sha256": "d997441c6454c5fbf9e519d33e95a6ba6b02822f489a6127bddfa952442c73f6",
+      "bytes": 7989,
+      "sha256": "bc1925aa80bb7eb856eefff81a071fc865b186ce348e16501be3f4f931042dd2",
       "storage": "git"
     },
     {
@@ -7096,8 +7096,8 @@
     },
     {
       "path": "EV Code/Fig5_lifecycle/input/production_draws.rds",
-      "bytes": 477527,
-      "sha256": "967d04818a2b228436d85e8135b90f4c62f3244322ae629839f23f5bc934dfd1",
+      "bytes": 477716,
+      "sha256": "d20144980955b4f44445420aa0e215c2bd2f0e81ff4691bff10e7c9e2fec0cbc",
       "storage": "git"
     },
     {
@@ -7120,8 +7120,14 @@
     },
     {
       "path": "EV Code/Fig6_parity/Fig6_parity.R",
-      "bytes": 10494,
-      "sha256": "0e9df8e844ea5fd88f81f8dd19f8e3667672848800f6e3d36004a81a4ba89c87",
+      "bytes": 11500,
+      "sha256": "189e8f6da10c336a590cbd91d52fd34d2cde5befe2ae258897cf3ecbe24b1b3c",
+      "storage": "git"
+    },
+    {
+      "path": "EV Code/Fig6_parity/README.md",
+      "bytes": 3078,
+      "sha256": "c82521d1298b900cbffea4dd52e0944ce879a96f751ed186fe788763865b6b15",
       "storage": "git"
     },
     {
@@ -7131,15 +7137,21 @@
       "storage": "git"
     },
     {
+      "path": "EV Code/Fig6_parity/input/production_calibration.csv",
+      "bytes": 303,
+      "sha256": "803172451629f32442c8b979c0dc2f5e420c2d18bef03a4b303951a52e379b95",
+      "storage": "git"
+    },
+    {
       "path": "EV Code/Fig6_parity/input/production_coefficients_EV.csv",
-      "bytes": 10661615,
-      "sha256": "f54072b8b580dcfa3948af1ec99c9cd80dc214bb09afdf5f2e5a1b550486035d",
+      "bytes": 9737752,
+      "sha256": "27cea97523bb6448794cff09a81234fe2e8589ab4f9c72c157c98b63732edf21",
       "storage": "git"
     },
     {
       "path": "EV Code/Fig6_parity/input/production_coefficients_ICEV.csv",
-      "bytes": 11126,
-      "sha256": "978997959f5c9e5e1c8e1ddda6c88663d0f090373d9cbea4c29d501141d8ba45",
+      "bytes": 10360,
+      "sha256": "c855435e6947452cdd0e1c7abe5a07c125725ad758fe9c7d84a07aabb265f5c7",
       "storage": "git"
     },
     {
@@ -7164,12 +7176,6 @@
       "path": "EV Code/Fig6_parity/input/vehicle_use_2023.csv",
       "bytes": 1740,
       "sha256": "58a807700db9cb11489fa2282fa50fa9bb6472e78e944d2e62be4bf9a45a3af7",
-      "storage": "git"
-    },
-    {
-      "path": "EV Code/Fig6_parity/README.md",
-      "bytes": 2455,
-      "sha256": "3fcf03e1b4c20dfb191ab41d5c4354c4cf6b0dbdda6741f47ab9803dcefd89ca",
       "storage": "git"
     }
   ],

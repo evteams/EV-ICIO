@@ -23,7 +23,7 @@ The `EV Code` folder contains the current analysis scripts and input data. Corre
 | Directory | Analysis |
 | --- | --- |
 | `EV Code/Fig3_production` | Vehicle production emissions and Monte Carlo calculations |
-| `EV Code/Fig4_sector` | Sector contributions to production emissions |
+| `EV Code/Fig4_sector` | Sector-share Monte Carlo medians and uncertainty intervals |
 | `EV Code/Fig5_lifecycle` | Vehicle life-cycle emissions |
 | `EV Code/Fig6_parity` | Carbon parity times and scenarios |
 
@@ -63,11 +63,19 @@ Rscript "EV Code/Fig6_parity/Fig6_parity.R"
 
 See the original scripts for required R packages and analysis settings. Output directories are created by the scripts. The Figure 3 Monte Carlo analysis uses the large input matrices described above.
 
+### Analysis input update on 21 October 2026
+
+The code and required inputs in the four analysis modules were synchronized with the author's updated analysis folders. For EV production, China's sector-D direct emission intensity is the original value multiplied by 1.12533, and China's C27 intensity is set directly to 0.0156 kt CO2 per million USD. ICEV calculations retain the original emission intensities. The included Fig5 and Fig6 production inputs use the same calibration; do not apply these adjustments a second time to those intermediate inputs.
+
+Fig4 now evaluates the original 1,000 EV A matrices and exports MC sector-share medians and intervals. Fig5 retains its existing recycling treatment. Fig6 contains only the main-text scenarios, excludes recycling, and uses production-year use-phase intensities. No SI packages, plotting files or simulation outputs are included in this synchronization.
+
+Fig5 and Fig6 can be run with their included compact production inputs. Running Fig3 writes its results to its own output directory; it does not automatically overwrite the inputs of the other modules. The original A files remain unchanged and continue to be distributed through the existing release archive.
+
 
 
 ## File integrity
 
-`file_manifest.json` and `SHA256SUMS.txt` record the paths, sizes and SHA-256 checksums of all 1,028 files in the current `EV Code` folder. 28 files are stored directly in this repository, and 1,000 matrices are stored in the release archive. Restoring the release inputs recovers the complete original file structure. To check the archive without extracting it, run `python download_mc_inputs.py --verify-only`.
+`file_manifest.json` and `SHA256SUMS.txt` record the paths, sizes and SHA-256 checksums of all 1,029 files in the current `EV Code` folder. 29 files are stored directly in this repository, and 1,000 matrices are stored in the release archive. Restoring the release inputs recovers the complete analysis input structure. To check the archive without extracting it, run `python download_mc_inputs.py --verify-only`.
 
 The README, checksum manifest and download helper are publication aids outside the `EV Code` directory.
 

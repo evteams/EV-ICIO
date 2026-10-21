@@ -10,7 +10,11 @@ countries <- c("CHN", "DEU", "JPN", "KOR", "MEX", "USA")
 n_A <- 1000L
 n_price <- 5000L
 seed <- 20261005L
-china_EV_multiplier <- 1.15
+china_D_multiplier <- 1.12533
+china_C27_intensity <- 0.0156 # kt CO2/million USD; absolute intensity, not a multiplier.
+production_calibration <- list(China_D_multiplier = china_D_multiplier,
+  China_C27_intensity = china_C27_intensity, Unit = "kt CO2/million USD",
+  Scope = "EV production only; ICEV unadjusted")
 solver <- "woodbury" 
 
 source_paths <- unlist(lapply(sys.frames(), function(x) x$ofile))
@@ -20,6 +24,10 @@ project_dir <- if (length(source_paths)) dirname(normalizePath(tail(source_paths
 input_dir <- file.path(project_dir, "input")
 output_dir <- file.path(project_dir, "output")
 dir.create(output_dir, showWarnings = FALSE)
+A_dir <- file.path(input_dir, "MC")
+# Prefer this package's MC folder; use the existing shared original matrices if absent.
+if (!file.exists(file.path(A_dir, "A_MC_0001.rds")))
+  A_dir <- file.path(project_dir, "..", "EV Code", "Fig3_production", "input", "MC")
 
 # 2. Read the raw inputs and construct direct emission intensities 
 raw_A <- read.csv(file.path(input_dir, "AEV_v6.csv"), check.names = FALSE)
@@ -33,8 +41,10 @@ emissions <- CO2$co2_kt[match(nodes, CO2$fd_id)]
 f_ICEV <- emissions / production
 f_ICEV[production == 0 & emissions == 0] <- 0
 f_EV <- f_ICEV
-china_nodes <- nodes %in% c("CHN_C27", "CHN_D")
-f_EV[china_nodes] <- f_EV[china_nodes] * china_EV_multiplier
+# Apply each supplier-node correction once, for EV targets in every country.
+
+f_EV[nodes == "CHN_D"] <- f_ICEV[nodes == "CHN_D"] * china_D_multiplier
+f_EV[nodes == "CHN_C27"] <- china_C27_intensity
 
 sales <- read.csv(file.path(input_dir, "vehicle_sales_2023.csv"))
 trade <- read.csv(file.path(input_dir, "vehicle_trade_2023.csv"))
@@ -67,6 +77,9 @@ selector <- function(targets) {
   S[cbind(match(targets, nodes), seq_along(targets))] <- 1
   S
 }
+supplier_countries <- unique(substr(nodes, 1, 3))
+electricity_suppliers <- sort(supplier_countries)
+component_names <- c("b_total", "b_C24A", paste0("D_", electricity_suppliers))
 coefficients <- function(B, f) {
   contribution <- sweep(as.matrix(B), 1, f, "*")
   b <- matrix(0, length(countries), 3,
@@ -77,15 +90,25 @@ coefficients <- function(B, f) {
     b[j, "Abroad"] <- sum(contribution[!domestic, j])
     b[j, "Total"] <- sum(contribution[, j])
   }
-  b
+  # Retain the same solved columns for downstream Fig5/Fig6 and the source-country diagram.
+
+  components <- cbind(b_total = b[, "Total"],
+    b_C24A = colSums(contribution[endsWith(nodes, "_C24A"), , drop = FALSE]),
+    t(contribution[match(paste0(electricity_suppliers, "_D"), nodes), , drop = FALSE]))
+  dimnames(components) <- list(countries, component_names)
+  by_source <- rowsum(contribution, group = substr(nodes, 1, 3), reorder = FALSE)
+  by_source <- by_source[supplier_countries, , drop = FALSE]
+  colnames(by_source) <- countries
+  list(Summary = b, Components = components, By_source = by_source)
 }
 S_ICEV <- selector(paste0(countries, "_FV"))
 B_ICEV <- solve(diag(length(nodes)) - A_ICEV, S_ICEV)
-b_ICEV <- coefficients(B_ICEV, f_ICEV)
+ICEV_calculation <- coefficients(B_ICEV, f_ICEV)
+b_ICEV <- ICEV_calculation$Summary
 rm(raw_A, A_ICEV, B_ICEV)
 
 S_EV <- selector(paste0(countries, "_EV"))
-A_files <- file.path(input_dir, "MC", sprintf("A_MC_%04d.rds", seq_len(n_A)))
+A_files <- file.path(A_dir, sprintf("A_MC_%04d.rds", seq_len(n_A)))
 A_reference <- readRDS(A_files[1])
 changed_columns <- which(grepl("_EV$", nodes))
 reference_columns <- as.matrix(A_reference[, changed_columns, drop = FALSE])
@@ -96,18 +119,25 @@ if (solver == "woodbury") {
 }
 b_EV <- array(NA_real_, c(n_A, length(countries), 3),
   dimnames = list(seq_len(n_A), countries, c("Domestic", "Abroad", "Total")))
+components_EV <- array(NA_real_, c(n_A, length(countries), length(component_names)),
+  dimnames = list(seq_len(n_A), countries, component_names))
+sources_EV <- array(NA_real_, c(n_A, length(supplier_countries), length(countries)),
+  dimnames = list(seq_len(n_A), supplier_countries, countries))
 for (m in seq_len(n_A)) {
   A <- if (m == 1) A_reference else readRDS(A_files[m])
   if (solver == "direct") B <- solve(Diagonal(length(nodes)) - A, S_EV)
   else if (m == 1) B <- B_reference
   else {
-    # Woodbury identity: exact solution for each supplied A / 每个A的精确列解。
+    # Woodbury identity: exact solution for each supplied A
     delta <- as.matrix(A[, changed_columns, drop = FALSE]) - reference_columns
     W <- as.matrix(solve(LU_reference, delta))
     B <- B_reference + W %*% solve(diag(length(changed_columns)) - W[changed_columns, , drop = FALSE],
                                    B_reference[changed_columns, , drop = FALSE])
   }
-  b_EV[m, , ] <- coefficients(B, f_EV)
+  EV_calculation <- coefficients(B, f_EV)
+  b_EV[m, , ] <- EV_calculation$Summary
+  components_EV[m, , ] <- EV_calculation$Components
+  sources_EV[m, , ] <- EV_calculation$By_source
   if (m %% 100 == 0) message("Solved A: ", m, "/", n_A)
 }
 
@@ -140,6 +170,10 @@ MC_summary <- do.call(rbind, rows)
 write.csv(MC_summary, file.path(output_dir, "Fig3_summary.csv"), row.names = FALSE)
 write.csv(do.call(rbind, price_draws), file.path(output_dir, "Price_and_Y_draws.csv"), row.names = FALSE)
 saveRDS(list(Settings = list(Countries = countries, N_A_EV = n_A, N_A_ICEV = 1L,
-  N_price = n_price, Seed = seed, Solver = solver, China_EV_multiplier = china_EV_multiplier),
+  N_price = n_price, Seed = seed, Solver = solver, Production_calibration = production_calibration),
   Price_draws = price_draws, EV_coefficients = b_EV, ICEV_coefficients = b_ICEV,
+  Scenario_coefficients = list(Suppliers = electricity_suppliers, EV = components_EV,
+    ICEV = ICEV_calculation$Components),
+  Source_coefficients = list(Suppliers = supplier_countries, EV = sources_EV,
+    ICEV = ICEV_calculation$By_source),
   Summary = MC_summary), file.path(output_dir, "Fig3_results.rds"))

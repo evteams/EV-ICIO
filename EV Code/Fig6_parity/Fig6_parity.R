@@ -21,6 +21,19 @@ price_seed <- 20261005L
 use_seed <- 2026100601L
 meg_seed <- 2026100501L
 read_input <- function(name) read.csv(file.path(input_dir, name), check.names = FALSE)
+# Require refreshed coefficients; production f and physical use-stage grid intensity differ.
+
+calibration_file <- file.path(input_dir, "production_calibration.csv")
+if (!file.exists(calibration_file))
+  stop("Run revised Fig3_production.R and Refresh_production_inputs.R first; production_calibration.csv is missing.")
+production_calibration <- read_input("production_calibration.csv")
+if (!isTRUE(all.equal(production_calibration$China_D_multiplier, 1.12533)) ||
+    !isTRUE(all.equal(production_calibration$China_C27_intensity, 0.0156)) ||
+    !identical(unname(tools::md5sum(file.path(input_dir, "production_coefficients_EV.csv"))),
+      production_calibration$EV_coefficients_MD5) ||
+    !identical(unname(tools::md5sum(file.path(input_dir, "production_coefficients_ICEV.csv"))),
+      production_calibration$ICEV_coefficients_MD5))
+  stop("Production coefficients do not match the new calibration; rerun Refresh_production_inputs.R.")
 coeff_EV <- read_input("production_coefficients_EV.csv")
 coeff_ICEV <- read_input("production_coefficients_ICEV.csv")
 price_ranges <- read_input("vehicle_price_ranges_2023.csv")
@@ -194,6 +207,7 @@ joint <- lapply(countries, function(cc) cbind(Country = cc, price_draws[[cc]], u
 write.csv(do.call(rbind, joint), file.path(output_dir, "Fig6_main_price_use_draws.csv"), row.names = FALSE)
 saveRDS(list(Settings = list(Years = years, Scenarios = scenario_table, N_joint = n_joint,
   Price_seed = price_seed, Use_seed = use_seed, MEG_seed = meg_seed,
+  Production_calibration = production_calibration,
   Use_sampling = "UF independent of one shared PHEV electricity/fuel multiplier",
   Annual_mileage_km_per_vehicle_year = setNames(vehicle$annual_km, vehicle$Country),
   Mileage_scope = "Same fixed country mileage for BEV, PHEV and ICEV; ICEV annual WTT/TTW calculated from kg CO2/km",
