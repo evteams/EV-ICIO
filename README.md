@@ -6,7 +6,7 @@ The repository contains two stages: `EV-table-construction/` establishes the EV 
 
 ## EV-table construction
 
-The following three original files are provided in [`EV-table-construction/`](EV-table-construction/) without changes to their contents:
+The following construction scripts and the current author-supplied parameter workbook are provided in [`EV-table-construction/`](EV-table-construction/):
 
 | File | Role |
 | --- | --- |
@@ -79,4 +79,4 @@ Fig5 and Fig6 can be run with their included compact production inputs. Running 
 
 The README, checksum manifest and download helper are publication aids outside the `EV Code` directory.
 
-`EV_table_construction_manifest.json` separately records the paths, sizes and SHA-256 checksums of the three original construction files. Their checksums are also included in `SHA256SUMS.txt`.
+`EV_table_construction_manifest.json` separately records the paths, sizes and SHA-256 checksums of the three construction files, including the current parameter workbook. Their checksums are also included in `SHA256SUMS.txt`.

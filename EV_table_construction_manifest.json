@@ -1,5 +1,5 @@
 {
-  "description": "Original files for EV-table construction, uploaded without content changes.",
+  "description": "EV-table construction scripts and the current author-supplied parameter workbook.",
   "file_count": 3,
   "files": [
     {
@@ -14,8 +14,8 @@
     },
     {
       "path": "EV-table-construction/Adata_v6.xlsx",
-      "bytes": 907804,
-      "sha256": "b1714703d6fae2334b2bc17c65b13a432765a9b1da7ee6c9655b4cda080d1d23"
+      "bytes": 902827,
+      "sha256": "75f1094cec6397fe4d2872a31aab5e8583089c1d5dc09b98b75be68378de8d90"
     }
   ]
 }
